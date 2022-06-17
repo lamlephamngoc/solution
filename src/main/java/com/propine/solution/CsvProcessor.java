@@ -1,11 +1,6 @@
-package com.propine.solution.csv;
+package com.propine.solution;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -16,12 +11,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static java.lang.String.format;
-
 @Slf4j
 public class CsvProcessor {
-    public static final String CRYPTO_COMPARE_API = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD";
-
+    private static final Map<String, List<Double>> map = new HashMap<>();
     private final String csvFilePath;
     private final String token;
     private final LocalDateTime inputDate;
@@ -33,7 +25,6 @@ public class CsvProcessor {
     }
 
     public Map<String, List<Double>> process() throws IOException {
-        Map<String, List<Double>> map = new HashMap<>();
         Path file = FileSystems.getDefault().getPath(this.csvFilePath);
         // skip first line
         try (Stream<String> lines = Files.lines(file).skip(1)) {
@@ -76,19 +67,6 @@ public class CsvProcessor {
 
     public boolean checkTokenExisting() {
         return this.token != null && this.token.length() > 0;
-    }
-
-    public static String exchangeRateByToken(String token) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(format(CRYPTO_COMPARE_API, token))
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            JSONObject json = JSON.parseObject(response.body().string());
-            return json.get("USD").toString();
-        }
     }
 
     private Double processRecord(double parseDouble, String depositOrWithdrawal) {
