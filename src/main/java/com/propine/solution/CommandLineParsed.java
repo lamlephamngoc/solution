@@ -1,11 +1,12 @@
 package com.propine.solution;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Setter
+@Getter
 @CommandLine.Command
 public class CommandLineParsed implements Runnable {
 
@@ -52,28 +55,7 @@ public class CommandLineParsed implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        latestPortfolioValuePerTokenInUSD(map);
+        new LatestPortfolioPrinter(map).print();
     }
 
-    private void latestPortfolioValuePerTokenInUSD(Map<String, List<Double>> map) {
-        DecimalFormat formatter = new DecimalFormat("#,##0.000");
-        map.forEach((token, amount) -> {
-                    Double exchangeRate = 1.0;
-                    try {
-                        exchangeRate = new ExchangeRateProcessor(token).exchangeRateByToken();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    log.info("{} value in USD: {}", token,
-                            formatter.format(getSumOfAmount(amount)
-                                    * exchangeRate
-                            )
-                    );
-                }
-        );
-    }
-
-    private double getSumOfAmount(List<Double> amount) {
-        return amount.stream().mapToDouble(Double::doubleValue).sum();
-    }
 }
