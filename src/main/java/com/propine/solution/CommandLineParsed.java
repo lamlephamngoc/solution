@@ -44,7 +44,7 @@ public class CommandLineParsed implements Runnable {
         // run processing CSV
         log.info("Start processing CSV file");
         CsvProcessor csvProcessor = new CsvProcessor("csv" + FileSystems.getDefault().getSeparator()
-                + "small_transactions.csv",
+                + "transactions.csv",
                 this.token, this.inputDate);
         if (csvProcessor.checkTokenExisting()) {
             log.info("Process the latest portfolio for token {}", this.token);
