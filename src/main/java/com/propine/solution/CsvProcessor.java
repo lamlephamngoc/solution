@@ -1,5 +1,7 @@
 package com.propine.solution;
 
+import com.propine.solution.exception.CsvFilePathIsMandatoryException;
+import com.propine.solution.exception.CsvFilePathIsNotFound;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class CsvProcessor {
-    private static final Map<String, List<Double>> map = new HashMap<>();
+    private Map<String, List<Double>> map = new HashMap<>();
     private final String csvFilePath;
     private final String token;
     private final LocalDateTime inputDate;
@@ -25,6 +27,9 @@ public class CsvProcessor {
     }
 
     public Map<String, List<Double>> process() throws IOException {
+        if (null == this.csvFilePath) {
+            throw new CsvFilePathIsMandatoryException("Csv file path is mandatory!!!");
+        }
         Path file = FileSystems.getDefault().getPath(this.csvFilePath);
         // skip first line
         try (Stream<String> lines = Files.lines(file).skip(1)) {
@@ -60,7 +65,7 @@ public class CsvProcessor {
 
             });
         } catch (IOException ioException) {
-            log.error("Error happened while processing CSV due to : {}", ioException.getMessage());
+            throw new CsvFilePathIsNotFound("Error happened while processing CSV due to: " + ioException.getMessage());
         }
         return map;
     }

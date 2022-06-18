@@ -25,6 +25,9 @@ public class CommandLineParsed implements Runnable {
     private String token;
     private LocalDateTime inputDate;
 
+    @CommandLine.Option(names = {"-test"})
+    private boolean testing;
+
     @CommandLine.Option(names = {"-d", "--date"}, description = {
             "date follow pattern YYYY-MM-DD, example: 2022-07-01"
     })
@@ -53,9 +56,9 @@ public class CommandLineParsed implements Runnable {
         try {
             map = csvProcessor.process();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error while process CSV file due to : {}", e.getMessage());
         }
-        new LatestPortfolioPrinter(map).print();
+        new LatestPortfolioPrinter(map, isTesting()).print();
     }
 
 }

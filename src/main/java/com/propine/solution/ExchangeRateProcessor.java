@@ -14,12 +14,27 @@ public class ExchangeRateProcessor {
     public static final String CRYPTO_COMPARE_API = "https://min-api.cryptocompare.com/data/price?fsym=%s&tsyms=USD";
 
     private final String token;
+    private final boolean testing;
 
-    public ExchangeRateProcessor(String token) {
+    public ExchangeRateProcessor(String token, boolean testing) {
+
         this.token = token;
+        this.testing = testing;
     }
 
     public Double exchangeRateByToken() throws IOException {
+        if (testing) {
+            if (token.equals("BTC")) {
+                return 30_000.0;
+            }
+            if (token.equals("ETH")) {
+                return 1_000.0;
+            }
+            if (token.equals("XRP")) {
+                return 0.3;
+            }
+        }
+
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

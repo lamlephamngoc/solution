@@ -9,10 +9,15 @@ import java.util.Map;
 
 @Slf4j
 public class LatestPortfolioPrinter {
-    private final Map<String, List<Double>> map;
+    private Map<String, List<Double>> map;
+    private final boolean testing;
 
-    public LatestPortfolioPrinter(Map<String, List<Double>> map) {
+    public LatestPortfolioPrinter(Map<String, List<Double>> map, boolean testing) {
+        if (map == null) {
+            throw new RuntimeException("Printer require map");
+        }
         this.map = map;
+        this.testing = testing;
     }
 
     public void print() {
@@ -20,7 +25,7 @@ public class LatestPortfolioPrinter {
         map.forEach((token, amount) -> {
                     Double exchangeRate = 1.0;
                     try {
-                        exchangeRate = new ExchangeRateProcessor(token).exchangeRateByToken();
+                        exchangeRate = new ExchangeRateProcessor(token, this.testing).exchangeRateByToken();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
