@@ -33,11 +33,23 @@
 ![alt text](docs/maven3.8.6-macOS-brew-setup.png "Maven 3.8.6 MacOS brew setup")
 
 
-## Run project by commandline
+## Run test cases by Intellij
+
+- Right click on src/test/java -> More Run/Debug -> Run 'All Tests' with Coverage
+
+![alt text](docs/intellij-test-results.png "Intellij Test Results")
+
+
+## Run test by Commandline
 
 ```shell
 
-    mvn clean install
-
+    mvn clean test
+    
+    mvn clean surefire-report:report
 
 ```
+
+- Please refer  ./docs/surefire-report.html
+
+![alt text](docs/surefire-report-screenshot.png "Surefire Report Screenshot")
