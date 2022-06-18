@@ -1,13 +1,18 @@
-package com.propine;
+package com.propine.solution;
 
+import com.propine.BaseTest;
 import com.propine.solution.CommandLineParsed;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandLineParsedTest {
+public class CommandLineParsedTest extends BaseTest {
     private final CommandLineParsed commandLineParsed = new CommandLineParsed();
 
     @Test
@@ -45,9 +50,11 @@ public class CommandLineParsedTest {
 
     @Test
     void test_run_function_standalone() {
-        commandLineParsed.setToken("BTC");
-        Thread thread = new Thread(commandLineParsed);
-        thread.start();
-
+        commandLineParsed.setTesting(true);
+        commandLineParsed.run();
+        assertThat(outContent.toString())
+                .containsSequence("BTC value in USD: 1,350,243.360")
+                .containsSequence("XRP value in USD: 4.660")
+                .containsSequence("ETH value in USD: 10,987.672");
     }
 }
